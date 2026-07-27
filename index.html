@@ -304,6 +304,22 @@ svg{flex:none}
 .ctable tbody tr:last-child th,.ctable tbody tr:last-child td{border-bottom:none}
 .ctable tbody th{font-size:12.5px;font-weight:600;color:var(--tp);white-space:nowrap}
 .ctable .us{background:var(--pri-08)}
+/* Narrow screens: the table scrolls sideways inside .tblwrap, so the row
+   label column is pinned. Without this you lose which row you are reading
+   as soon as you swipe. The header corner pins too, or it slides under. */
+@media(max-width:900px){
+  .ctable tbody th,.ctable thead th:first-child{
+    position:sticky;left:0;
+    background:color-mix(in srgb,var(--surface) 55%,var(--bg));
+    box-shadow:1px 0 0 var(--bd),6px 0 12px -8px rgba(0,0,0,.55);
+  }
+  .ctable tbody th{z-index:2}
+  .ctable thead th:first-child{z-index:3}
+  .ctable tbody th{white-space:normal;max-width:132px}
+}
+@media print{
+  .ctable tbody th,.ctable thead th:first-child{position:static;box-shadow:none}
+}
 .ctable thead .us{color:var(--pri);font-weight:700}
 .cell{display:flex;gap:8px;align-items:flex-start;line-height:1.45}
 .cell svg{width:14px;height:14px;margin-top:2px}
@@ -2594,6 +2610,54 @@ const REPORTS = {
       ]
     },
 
+    /* 10b - THE PRODUCT ROUTE */
+    {
+      id: "product-route", type: "persona-cards",
+      kicker: "Turning Expertise Into Income",
+      headline: "The audience is not the asset.",
+      headline2: "What you know is.",
+      body: "Four ways your knowledge becomes something people can buy, ranked by how quickly each one could start.",
+      cards: [
+        {
+          title: "Corporate women's health sessions", tag: "Could start first", icon: "users",
+          text: "Workshops for Colombo companies on women's health, menstrual health and wellbeing at work.",
+          points: [
+            { label: "Who buys",   text: "HR and wellbeing leads inside corporates" },
+            { label: "Why you",    text: "A practising family physician with an MSc in Sexual Health is a far stronger draw than a general wellness speaker" },
+            { label: "To build",   text: "Almost nothing. The expertise is the product" }
+          ]
+        },
+        {
+          title: "A paid guide on one condition", tag: "Largely written", icon: "list",
+          text: "One deep guide in plain English on a topic you already own, PCOS for example.",
+          points: [
+            { label: "Who buys",   text: "Women handed a diagnosis and no explanation" },
+            { label: "Why you",    text: "You have already published this in pieces across 468 posts" },
+            { label: "To build",   text: "Assembly and structure rather than new work" }
+          ]
+        },
+        {
+          title: "Sexual and reproductive health education material", tag: "Institutional", icon: "briefcase",
+          text: "Curriculum and content kits for schools, NGOs and health programmes.",
+          points: [
+            { label: "Who buys",   text: "Institutions rather than individuals, which means budgets rather than impulse" },
+            { label: "Why you",    text: "MSc in Sexual Health and a PGCert in Medical Education, plus existing work with UNFPA, IPPF and the FPA" },
+            { label: "To build",   text: "Structured material, which takes longer and lasts longer" }
+          ]
+        },
+        {
+          title: "Teaching other doctors to communicate", tag: "Specialist", icon: "star",
+          text: "Helping clinicians build a credible public voice without putting their professional standing at risk.",
+          points: [
+            { label: "Who buys",   text: "Doctors and medical institutions" },
+            { label: "Why you",    text: "You are one of very few Sri Lankan doctors who has actually done it" },
+            { label: "To build",   text: "A PGCert in Medical Education means you are qualified to teach the teaching" }
+          ]
+        }
+      ],
+      strip: "A product turns an audience into income that does not depend on posting every day. It also gives every follower somewhere to go. Which of these we pursue is your decision with us in month one."
+    },
+
     /* 11 - THE 90 DAY PLAN */
     {
       id: "roadmap", type: "roadmap-columns",
@@ -3042,7 +3106,7 @@ R['persona-cards']=function(s){
       return '<div class="pt-row"><b>'+esc(p.label)+'</b><span>'+esc(p.text)+'</span></div>';
     }).join('')+'</div>';
     return h+'</article>';
-  }).join('')+'</div>';
+  }).join('')+'</div>'+(s.strip?'<div class="strip" data-rv>'+esc(s.strip)+'</div>':'');
 };
 
 R['comparison-table']=function(s){
